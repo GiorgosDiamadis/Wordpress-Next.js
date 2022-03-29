@@ -12,6 +12,8 @@ services:
       MYSQL_DATABASE: wordpress_db
       MYSQL_USER: wordpress_user
       MYSQL_PASSWORD: wordpress_password
+    networks:
+      net:
   wordpress:
     container_name: 'wordpress_next'
     depends_on:
@@ -24,6 +26,8 @@ services:
       WORDPRESS_DB_USER: wordpress_user
       WORDPRESS_DB_PASSWORD: wordpress_password
       WORDPRESS_DB_NAME: wordpress_db
+    networks:
+      net:
     volumes:
       - "./wordpress:/var/www/html"
       - "./wordpress/wp-content/plugins:/var/www/html/wp-content/plugins"
@@ -45,11 +49,19 @@ services:
       PMA_HOST: db
       PMA_PASSWORD: somewordpress
       PMA_USER: someuser
+    networks:
+      net:
   frontend:
     build: nextjs
     container_name: "nextjs_front"
     depends_on:
       - "wordpress"
-#    command: npm run dev
+    ports:
+      - "3000:3000"
     volumes:
-      - ./nextjs:/usr/app/nextjs
+      - ./nextjs/my-app:/usr/app/nextjs
+    networks:
+      net:
+
+networks:
+  net:
